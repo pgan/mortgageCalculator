@@ -1,4 +1,5 @@
 import java.text.NumberFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MortgageCalculator {
@@ -8,15 +9,40 @@ public class MortgageCalculator {
         System.out.println("--- Calculate your Mortgage Repayment ---");
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter your principal amount");
-        double principal = scanner.nextDouble();
+        double principal = 0;
+        float annualInterestRate = 0;
+        int termInYears = 0;
 
-        System.out.println("Enter your annual interest rate");
-        float annualInterestRate = scanner.nextFloat();
+        try{
+            System.out.println("Enter your principal amount");
+            principal = scanner.nextDouble();
+        } catch(InputMismatchException e){
+            System.out.println("Please enter a valid number for your prinicpal amount");
+            scanner.close();
+            return;
+        }
 
-        System.out.println("Enter how many years your loan is");
-        int termInYears = scanner.nextInt();
-        //scanner.close();
+
+        try{
+            System.out.println("Enter your annual interest rate (eg., enter 5.99 for 5.99%)");
+            annualInterestRate = scanner.nextFloat();
+            if(annualInterestRate > 1){
+                annualInterestRate /= 100;
+            }
+        }catch(InputMismatchException e){
+            System.out.println("Please enter a valid number for your annual interest rate");
+            scanner.close();
+            return;
+        }
+
+        try{
+            System.out.println("Enter how many years your loan is");
+            termInYears = scanner.nextInt();
+        } catch(InputMismatchException e){
+            System.out.println("Please enter a valid number of years for your loan length");
+            scanner.close();
+            return;
+        }
 
         float monthlyInterestRate = annualInterestRate / MONTHS_IN_YEAR;
         int numberOfPayments = termInYears * MONTHS_IN_YEAR;
@@ -27,19 +53,23 @@ public class MortgageCalculator {
         
         //String monthlyPaymentFormatted = NumberFormat.getCurrencyInstance().format(monthlyPayment);
 
-        System.out.println("Your Monthly Payment is: "+ NumberFormat.getCurrencyInstance().format(monthlyPayment));
+        System.out.println("--- Your Monthly Payment is: "+ NumberFormat.getCurrencyInstance().format(monthlyPayment) + " ---");
         System.out.println("Do you want to know the total payback amount? y/n");
         String knowTruth = scanner.next();
-
-        if(knowTruth.equals("y")){
-            System.out.println("Total Payback amount: " + NumberFormat.getCurrencyInstance().format(monthlyPayment*numberOfPayments));
+        try{
+            if(knowTruth.equalsIgnoreCase("y")){
+                System.out.println("--- Total Payback amount: " + NumberFormat.getCurrencyInstance().format(monthlyPayment*numberOfPayments) + " ---");
+            } else if (knowTruth.equalsIgnoreCase("n")) {
+                System.out.println("Have a nice day ");
+            } else{
+                System.out.println(knowTruth + "is not a valid response.");
+            }
+        }catch(InputMismatchException e){
+            System.out.println("Please enter a valid y/n response");
             scanner.close();
-        } else if (knowTruth.equals("n")) {
-            System.out.println("Have a nice day ");
-            scanner.close();
-        } else{
-            System.out.println(knowTruth + "is not a valid response.");
-            scanner.close();
+            return;
         }
+
+        scanner.close();
     }
 }
