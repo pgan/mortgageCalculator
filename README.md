@@ -2,6 +2,10 @@
 
 Creating a mortgage calculator app in Java, to refresh skills.
 
+## How to run the project
+
+In terminal run the following command `javac -d bin src/MortgageCalculator.java && java -cp bin MortgageCalculator` and then follow the prompts.
+
 ## Folder Structure
 
 The workspace contains two folders by default, where:
